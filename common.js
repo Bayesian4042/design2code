@@ -26,8 +26,6 @@ export async function getCode(messages, model) {
       temperature: 0,
     });
 
-    console.log("raw output> ", chatCompletion.choices[0].message.content);
-
       const codeBlocks = [];
       const tree = fromMarkdown(
         chatCompletion.choices[0].message.content || ""

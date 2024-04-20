@@ -24,7 +24,6 @@ async function readSystemPrompt() {
 app.get("/design-to-code", async (req, res) => {
   try {
     const systemPrompt = await readSystemPrompt();
-    console.log("system prompt:", systemPrompt);
     const result = {
         prompt: "hero section",
         images: ["https://raw.githubusercontent.com/Bayesian4042/design2code/master/hero_section.png"],
