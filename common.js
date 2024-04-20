@@ -1,6 +1,5 @@
 import { config } from "dotenv";
 import OpenAI from "openai";
-import axiosRetry from "axios-retry";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { toMarkdown } from "mdast-util-to-markdown";
 import { visitParents } from "unist-util-visit-parents";
@@ -8,7 +7,7 @@ import { remove } from "unist-util-remove";
 
 config(); // Loads .env file into process.env
 
-const apiKey = process.env.OPENAI_API_KEY || "";
+const apiKey = process.env.OPENAI_API_KEY;
 if (!apiKey) throw new Error("Failed to get OpenAI API key");
 
 
@@ -30,9 +29,11 @@ export async function getCode(messages, model) {
     console.log("raw output> ", chatCompletion.choices[0].message.content);
 
       const codeBlocks = [];
-      const tree = fromMarkdown(chatCompletion.choices[0].text || "");
+      const tree = fromMarkdown(
+        chatCompletion.choices[0].message.content || ""
+     );
 
-      visitParents(tree, { type: "code" }, (node) => {
+      visitParents(tree, "code", (node) => {
         codeBlocks.push(node.value.trim());
       });
 
@@ -40,7 +41,7 @@ export async function getCode(messages, model) {
         throw new Error(`Invalid code blocks ${JSON.stringify(codeBlocks)}`);
       }
 
-      remove(tree, { type: "code" });
+      remove(tree,  "code");
       return {
         code: codeBlocks[0],
         description: toMarkdown(tree),
