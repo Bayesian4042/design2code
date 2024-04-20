@@ -21,7 +21,7 @@ async function readSystemPrompt() {
   return readFile(join(__dirname, "./design-to-code-prompt.md"), { encoding: "utf8" });
 }
 
-app.get("/ui-gen", async (req, res) => {
+app.get("/design-to-code", async (req, res) => {
   try {
     const systemPrompt = await readSystemPrompt();
     console.log("system prompt:", systemPrompt);
